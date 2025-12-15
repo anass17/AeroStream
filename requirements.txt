@@ -1,0 +1,15 @@
+chromadb
+datasets
+joblib
+matplotlib
+seaborn
+nltk
+numpy
+pandas
+scikit-learn
+sentence-transformers
+tf-keras
+wordcloud
+xgboost
+apache-airflow
+streamlit
