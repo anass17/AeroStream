@@ -1,0 +1,1 @@
+This README is written in English. For the French version, see [README.md](README.md).
