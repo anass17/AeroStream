@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/jupyter.Dockerfile
-    container_name: newsvector-jupyter
+    container_name: aerostream-jupyter
     ports:
       - "8888:8888"
     volumes:
@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: docker/streamlit.Dockerfile
-    container_name: newsvector-streamlit
+    container_name: aerostream-streamlit
     ports:
       - "8501:8501"
     volumes:
@@ -32,7 +32,7 @@ services:
     build:
       context: .
       dockerfile: docker/airflow.Dockerfile
-    container_name: newsvector-airflow
+    container_name: aerostream-airflow
     ports:
       - "8080:8080"
     volumes:
