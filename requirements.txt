@@ -13,3 +13,5 @@ wordcloud
 xgboost
 apache-airflow
 streamlit
+transformers
+sentencepiece
