@@ -9,18 +9,18 @@ log_reg = jb.load('./models/ml/logistic_regression_cv.pkl')
 encoder = jb.load('./models/encoders/encoder_clean.pkl')
 emb_model = SentenceTransformer('intfloat/e5-large-v2')
 
-class Text(BaseModel):
-    text: str
+class Texts(BaseModel):
+    texts: list[str]
 
 @router.post("/predict")
-def predict(data: Text):
+def predict(data: Texts):
 
-    embeddings = emb_model.encode([data.text], normalize_embeddings=True, convert_to_numpy=True)
+    embeddings = emb_model.encode(data.texts, normalize_embeddings=True, convert_to_numpy=True)
 
-    prediction = log_reg.predict(embeddings)
+    predictions = log_reg.predict(embeddings)
 
-    class_name = encoder.inverse_transform(prediction)[0]
+    class_names = encoder.inverse_transform(predictions).tolist()
 
     return {
-        "label": str(class_name)
+        "predictions": class_names
     }
