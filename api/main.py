@@ -1,26 +1,25 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-import joblib as jb
-from sentence_transformers import SentenceTransformer
+from api.routers.batch import router as batch_router
+from api.routers.predict import router as predict_router
 
-app = FastAPI()
 
-log_reg = jb.load('./models/ml/logistic_regression_cv.pkl')
-encoder = jb.load('./models/encoders/encoder_clean.pkl')
-emb_model = SentenceTransformer('intfloat/e5-large-v2')
+app = FastAPI(
+    title="AeroStream",
+    version="1.0.0"
+)
 
-class Text(BaseModel):
-    text: str
+# Register routers
+app.include_router(batch_router, prefix="/api", tags=["Batch"])
+app.include_router(predict_router, prefix="/api", tags=["Predict"])
 
-@app.post("/predict")
-def predict(data: Text):
 
-    embeddings = emb_model.encode([data.text], normalize_embeddings=True, convert_to_numpy=True)
-
-    prediction = log_reg.predict(embeddings)
-
-    class_name = encoder.inverse_transform(prediction)[0]
-
+@app.get("/")
+def root():
     return {
-        "Label": str(class_name)
+        "message": "API is running",
+        "routes":
+            {
+                'Batch': '/api/batch',
+                'Predict': '/api/predict',
+            }
     }
