@@ -1,4 +1,4 @@
-from tasks.queries import tweets_count_per_airline, sentiments_distribution
+from tasks.queries import tweets_count_per_airline, sentiments_distribution, satisfaction_rate
 
 data = tweets_count_per_airline()
 
@@ -9,3 +9,9 @@ data_2 = sentiments_distribution()
 
 for sentiment, count in data_2:
     print(f"{sentiment :10s} - {count}")
+
+data_3 = satisfaction_rate()
+
+rate = (data_3['positive'] / data_3['total']) * 100
+
+print(f"{rate}%")

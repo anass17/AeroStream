@@ -20,6 +20,7 @@ def tweets_count_per_airline():
     return data
     
 
+
 ##### Calculer la répartition des sentiments
 
 def sentiments_distribution():
@@ -31,9 +32,27 @@ def sentiments_distribution():
         .group_by(Prediction.label)
         .order_by(func.count(Prediction.label).desc())
     )
-    
+
     result = db.execute(stmt)
 
     data = result.all()
 
     return data
+
+
+
+##### Calculer le taux de satisfaction
+
+def satisfaction_rate():
+
+    db = SessionLocal()
+
+    stmt = select(func.count(Prediction.label))
+    result = db.execute(stmt)
+    total_tweets_count = (result.first())[0]
+
+    stmt = select(func.count(Prediction.label)).where(Prediction.label == 'positive')
+    result = db.execute(stmt)
+    positive_tweets_count = (result.first())[0]
+
+    return {"total": total_tweets_count, "positive": positive_tweets_count}
