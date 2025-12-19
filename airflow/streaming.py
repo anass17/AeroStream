@@ -4,6 +4,7 @@ from tasks.fetch import fetch_data
 from tasks.clean import clean_data
 from tasks.predict import generate_predictions
 from tasks.stock import insert_predictions
+from tasks.queries import db_query
 
 API_BATCH_URL = "http://127.0.0.1:8000/api/batch"
 API_PREDICT_URL = "http://127.0.0.1:8000/api/predict"
