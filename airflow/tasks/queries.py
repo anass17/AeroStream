@@ -56,3 +56,27 @@ def satisfaction_rate():
     positive_tweets_count = (result.first())[0]
 
     return {"total": total_tweets_count, "positive": positive_tweets_count}
+
+
+
+##### Identifier les causes principales des avis négatifs
+
+def identify_main_causes():
+    
+    db = SessionLocal()
+
+    stmt = select(
+        Prediction.negativereason, 
+        func.count(Prediction.negativereason)
+    ).where(
+        Prediction.label == 'negative',
+        Prediction.negativereason.is_not(None)
+    ).group_by(
+        Prediction.negativereason
+    ).order_by(func.count(Prediction.negativereason).desc())
+
+    result = db.execute(stmt)
+
+    data = result.all()
+
+    return data
