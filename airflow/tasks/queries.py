@@ -4,7 +4,7 @@ from sqlalchemy import select, func
 
 ##### Calculer le volume de tweets par compagnie
 
-def tweets_count():
+def tweets_count_per_airline():
 
     db = SessionLocal()
 
@@ -19,3 +19,21 @@ def tweets_count():
 
     return data
     
+
+##### Calculer la répartition des sentiments
+
+def sentiments_distribution():
+    
+    db = SessionLocal()
+
+    stmt = (
+        select(Prediction.label, func.count(Prediction.label))
+        .group_by(Prediction.label)
+        .order_by(func.count(Prediction.label).desc())
+    )
+    
+    result = db.execute(stmt)
+
+    data = result.all()
+
+    return data
