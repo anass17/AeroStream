@@ -1,6 +1,7 @@
 import requests
 
-def generate_predictions(predict_url, data):
+def generate_predictions(predict_url, ti):
+    data = ti.xcom_pull(task_ids="clean_data")
     
     payload = {
         "texts": [item['text'] for item in data]

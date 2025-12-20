@@ -6,6 +6,11 @@ AeroStream est un système intelligent de classification des avis clients des co
 
 ## installation:
 
+#### Créer une base de données
+
+docker exec -it aerostream-postgres psql -U postgres 
+CREATE DATABASE aerostream
+
 #### Supprimer l'utilisateur `admin`
 docker exec -it aerostream-airflow airflow users delete --username admin
 

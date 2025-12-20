@@ -1,10 +1,24 @@
 version: "3.9"
 
 services:
+
+  postgres:
+    image: postgres:15
+    container_name: aerostream-postgres
+    environment:
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
   jupyter:
     build:
       context: .
-      dockerfile: docker/jupyter.Dockerfile
+      dockerfile: docker/Dockerfile.jupyter
     container_name: aerostream-jupyter
     ports:
       - "8888:8888"
@@ -18,20 +32,27 @@ services:
   streamlit:
     build:
       context: .
-      dockerfile: docker/streamlit.Dockerfile
+      dockerfile: docker/Dockerfile.streamlit
     container_name: aerostream-streamlit
     ports:
       - "8501:8501"
     volumes:
       - ./dashboard:/dashboard
       - ./models:/models
+    environment:
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PORT: ${DATABASE_PORT}
+      POSTGRES_DB: ${DATABASE_DB}
     depends_on:
-      - jupyter
+      - postgres
+    command: streamlit run app.py --server.runOnSave=true
 
   airflow:
     build:
       context: .
-      dockerfile: docker/airflow.Dockerfile
+      dockerfile: docker/Dockerfile.airflow
     container_name: aerostream-airflow
     ports:
       - "8080:8080"
@@ -40,5 +61,24 @@ services:
       - ./data:/opt/airflow/data
       - ./models:/opt/airflow/models
     environment:
-      - AIRFLOW__CORE__LOAD_EXAMPLES=False
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PORT: ${DATABASE_PORT}
+      POSTGRES_DB: ${DATABASE_DB}
+    depends_on:
+      - postgres
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: aerostream-api
+    volumes:
+      - ./api:/api
+      - ./models:/api/models
+    ports:
+      - "8000:8000"
