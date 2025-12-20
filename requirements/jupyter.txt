@@ -1,0 +1,10 @@
+datasets
+chromadb
+nltk
+scikit-learn
+sentence-transformers
+tf-keras
+wordcloud
+xgboost
+transformers
+sentencepiece

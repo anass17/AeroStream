@@ -1,0 +1,10 @@
+scikit-learn==1.7.2
+sentence-transformers
+tf-keras
+transformers
+sentencepiece
+fastapi
+uvicorn
+pydantic
+faker
+sqlalchemy

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.routers.batch import router as batch_router
-from api.routers.predict import router as predict_router
+from routers.batch import router as batch_router
+from routers.predict import router as predict_router
 
 
 app = FastAPI(
