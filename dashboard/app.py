@@ -4,6 +4,7 @@ import components.bar_chart as ch
 from components.pie_chart import pie_chart
 from components.line_chart import line_chart
 from components.stat_box import html_stat_box
+from streamlit_autorefresh import st_autorefresh
 from extraction.data_fetch import (
     intiate_db, 
     tweets_count_per_airline, 
@@ -16,6 +17,8 @@ from extraction.data_fetch import (
 )
 
 HEIGHT = 400
+
+st_autorefresh(interval=60000, key="refresh")
 
 
 
