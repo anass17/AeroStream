@@ -1,6 +1,20 @@
 version: "3.9"
 
 services:
+
+  postgres:
+    image: postgres:15
+    container_name: aerostream-postgres
+    environment:
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
   jupyter:
     build:
       context: .
@@ -25,8 +39,15 @@ services:
     volumes:
       - ./dashboard:/dashboard
       - ./models:/models
+    environment:
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PORT: ${DATABASE_PORT}
+      POSTGRES_DB: ${DATABASE_DB}
     depends_on:
-      - jupyter
+      - postgres
+    command: streamlit run app.py --server.runOnSave=true
 
   airflow:
     build:
@@ -40,8 +61,16 @@ services:
       - ./data:/opt/airflow/data
       - ./models:/opt/airflow/models
     environment:
-      - AIRFLOW__CORE__LOAD_EXAMPLES=False
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PORT: ${DATABASE_PORT}
+      POSTGRES_DB: ${DATABASE_DB}
+    depends_on:
+      - postgres
 
   api:
     build:

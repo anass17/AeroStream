@@ -6,7 +6,7 @@ def horizental_bar_chart(df, x_col, y_col, x_col_title, y_col_title, height = 40
         
     bars = (
         alt.Chart(df)
-        .mark_bar(size=30)
+        .mark_bar(size=22)
         .encode(
             y=alt.Y(
                 f"{x_col}:N",
@@ -57,9 +57,9 @@ def split_horizental_bar_chart(df, x_col, middle_col, y_col, x_col_title, middle
         value_name=y_col
     )
 
-    bars = (
+    chart = (
         alt.Chart(df_melted)
-        .mark_bar(size=30)
+        .mark_bar(size=22)
         .encode(
             y=alt.Y(f"{x_col}:N", title=x_col_title),
             x=alt.X(f"{y_col}:Q", title=y_col_title),
@@ -67,28 +67,10 @@ def split_horizental_bar_chart(df, x_col, middle_col, y_col, x_col_title, middle
                 f"{middle_col_name}:N",
                 title=middle_col_name,
                 legend=alt.Legend(orient="bottom", direction="horizontal")
-            ),
-            tooltip=[f"{x_col}:N", f"{middle_col_name}:N", f"{y_col}:Q"]
+            )
+        ).properties(
+            height=height
         )
     )
-
-    text = (
-        alt.Chart(df_melted)
-        .mark_text(
-            align="right",
-            baseline="middle",
-            dx=-5, 
-            color="white",
-            size=12
-        )
-        .encode(
-            y=alt.Y(f"{x_col}:N", title=x_col_title),
-            x=alt.X(f"{y_col}:Q", stack="zero"),
-            detail=f"{middle_col_name}:N", 
-            text=alt.Text(f"{y_col}:Q")
-        )
-    )
-
-    chart = (bars + text).properties(height=height)
 
     return chart
