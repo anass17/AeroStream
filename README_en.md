@@ -260,4 +260,4 @@ http://localhost:8501
 
 ### Architecture
 
-![Architecture](https://github.com/user-attachments/assets/3841e38b-63cd-468e-870d-42222abf5419)
+![Architecture](https://github.com/user-attachments/assets/75010b20-4ac8-4d54-b46d-b089030d626d)
